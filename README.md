@@ -1,71 +1,97 @@
 # Interactive OS Algorithm Lab
 
-A Python-based mini-project for visualizing and comparing core Operating Systems algorithms.
-
-**Status:** Initial setup — implementation planned.
+A Python-based mini-project for visualizing and comparing core Operating Systems algorithms through an interactive Streamlit interface.
 
 ## Overview
 
-This project aims to help students understand CPU scheduling, virtual memory, and deadlock avoidance through interactive simulations and algorithm comparisons.
+This project helps students understand CPU scheduling, virtual memory (page replacement), and deadlock avoidance through interactive simulations, metric tables, and visualizations (Gantt charts, fault-rate bar charts, step-by-step memory traces).
 
-## Planned Modules
+## Modules
 
-### 1. CPU Scheduling
-- FCFS (First Come, First Served)
-- SJF (non-preemptive)
-- SRTF (preemptive SJF)
-- Round Robin
-- Priority Scheduling (non-preemptive)
-- Gantt charts and waiting, turnaround, and response-time metrics
+### 1. CPU Scheduling (`algorithms/scheduling.py`)
+- FCFS (First Come, First Served) — non-preemptive
+- SJF (Shortest Job First) — non-preemptive
+- SRTF (Shortest Remaining Time First) — preemptive
+- Round Robin — preemptive, configurable time quantum
+- Priority Scheduling — non-preemptive (lower number = higher priority)
 
-### 2. Page Replacement
-- FIFO
-- LRU
-- Optimal
-- Page-frame visualization, page hits, page faults, and fault-rate comparison
+Each algorithm returns waiting time, turnaround time, response time, per-process metrics, and a chronological execution sequence (including CPU idle segments) for Gantt-chart rendering.
 
-### 3. Deadlock Avoidance
-- Banker's Algorithm
-- Allocation, Maximum, Available, and Need matrices
-- Safe-sequence detection
-- Safe and unsafe state analysis
+### 2. Page Replacement (`algorithms/page_replacement.py`)
+- FIFO (First In, First Out)
+- LRU (Least Recently Used)
+- Optimal (MIN / future-knowledge)
+
+Each algorithm returns page hits, page faults, fault/hit rates, and a step-by-step history of frame states. All three can be run simultaneously for a side-by-side fault-rate comparison.
+
+### 3. Deadlock Avoidance — Banker's Algorithm (`algorithms/bankers.py`)
+- Accepts Allocation, Maximum, and Available matrices
+- Computes the Need matrix (Need = Max − Allocation)
+- Safety algorithm: returns safe/unsafe verdict and the safe sequence
+- Step-by-step Work/Finish trace for inspection
 
 ## Technology Stack
 
 - **Python** — algorithm implementation
-- **Streamlit** — interactive interface
-- **Plotly** — visualizations
-- **pandas** — result tables
+- **Streamlit** — interactive web interface
+- **Plotly** — visualizations (Gantt chart, fault-rate bar chart)
+- **pandas** — result dataframes
 - **pytest** — automated testing
-- **Git and GitHub** — version control
 
-## Planned Project Structure
+## Project Structure
 
-    os-mini-project/
-    ├── app.py
-    ├── algorithms/
-    │   ├── scheduling.py
-    │   ├── page_replacement.py
-    │   └── bankers.py
-    ├── tests/
-    ├── requirements.txt
-    └── README.md
+```
+os-mini-project/
+├── app.py                    # Streamlit application
+├── requirements.txt          # streamlit, plotly, pandas, pytest
+├── README.md
+├── algorithms/
+│   ├── __init__.py
+│   ├── scheduling.py         # CPU scheduling algorithms
+│   ├── page_replacement.py   # Page replacement algorithms
+│   └── bankers.py            # Banker's deadlock avoidance
+└── tests/
+    └── test_algorithms.py    # pytest cases (24 tests)
+```
 
-## Planned Setup
+## Setup
 
-Once the implementation is added, clone the repository:
+Clone the repository and create a virtual environment:
 
-    git clone https://github.com/Vishal-141206/os-mini-project.git
-    cd os-mini-project
-    python -m venv .venv
+```bash
+git clone https://github.com/Vishal-141206/os-mini-project.git
+cd os-mini-project
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+```
 
-Install the dependencies listed in `requirements.txt`, then launch the application using:
+Install dependencies:
 
-    streamlit run app.py
+```bash
+pip install -r requirements.txt
+```
 
-## Evaluation Plan
+Launch the application:
 
-The algorithms will be tested with known examples and edge cases. The project will compare algorithm performance using consistent inputs and calculated results.
+```bash
+streamlit run app.py
+```
+
+Then open the URL shown by Streamlit (typically `http://localhost:8501`).
+
+## Running Tests
+
+```bash
+pytest tests/test_algorithms.py
+```
+
+The suite uses classic textbook OS examples to verify algorithmic correctness (24 test cases, all passing).
+
+## Usage
+
+- **CPU Scheduling:** Add processes (Arrival Time, Burst Time, Priority) dynamically, pick an algorithm (and Round Robin quantum), then view the metrics dataframe, averages, and an interactive Gantt chart.
+- **Page Replacement:** Enter a comma-separated reference string and frame count; view a fault-rate comparison bar chart plus per-algorithm step-by-step memory-state tables.
+- **Deadlock Avoidance:** Edit the Allocation, Maximum, and Available matrices in grid inputs, run the Banker's algorithm, and see the Need matrix, SAFE/UNSAFE verdict, safe sequence, and safety trace.
 
 ## Scope
 
